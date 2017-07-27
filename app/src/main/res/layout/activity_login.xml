@@ -1,0 +1,110 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivUberLogo"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/uber_main" />
+
+        <LinearLayout
+            android:id="@+id/llphone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp"
+            android:orientation="vertical"
+            android:transitionName="@string/transition_llPhone">
+
+            <TextView
+                android:id="@+id/tvMoving"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="20dp"
+                android:text="@string/get_moving"
+                android:textColor="#262626"
+                android:textSize="24sp" />
+
+
+            <LinearLayout
+                android:id="@+id/llInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingLeft="20dp">
+
+                <ImageView
+                    android:id="@+id/ivFlag"
+                    android:layout_width="42dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/flag"
+                    android:transitionName="@string/transition_ivFlag" />
+
+                <TextView
+                    android:id="@+id/tvCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    android:text="+91"
+                    android:textColor="#0E0E0E"
+                    android:textSize="16sp"
+                    android:transitionName="@string/transition_tvCode" />
+
+                <TextView
+                    android:id="@+id/tvPhoneNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/phone_hint"
+                    android:textColorHint="#DADBDF"
+                    android:gravity="start"
+                    android:textSize="20sp"
+                    android:transitionName="@string/transition_tvPhoneNo" />
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/llInfo"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#EEEEEE" />
+
+            <TextView
+                android:id="@+id/tvConnectSocial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:text="Or connect with social"
+                android:textColor="#386D7C"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/ic_arrow_back"
+        android:transitionName="@string/transition_arrow"/>
+
+</FrameLayout>
