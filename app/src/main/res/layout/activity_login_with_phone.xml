@@ -1,0 +1,99 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootFrame">
+
+    <LinearLayout
+        android:id="@+id/llphone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:paddingTop="60dp"
+        android:orientation="vertical"
+        android:transitionName="@string/transition_llPhone">
+
+        <TextView
+            android:id="@+id/tvMoving"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:hint="sdfsdfdsf"
+            android:text="@string/enter_no"
+            android:textColor="#262626"
+            android:textColorHint="#DADBDF"
+            android:textSize="18sp"
+            android:transitionName="@string/transition_tvPhoneNo" />
+
+
+        <LinearLayout
+            android:id="@+id/llInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp">
+
+            <ImageView
+                android:id="@+id/ivFlag"
+                android:layout_width="42dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/flag"
+                android:transitionName="@string/transition_ivFlag" />
+
+            <TextView
+                android:id="@+id/tvCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="+91"
+                android:textColor="#0E0E0E"
+                android:textSize="18sp"
+                android:transitionName="@string/transition_tvCode" />
+
+            <EditText
+                android:id="@+id/etPhoneNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:cursorVisible="true"
+                android:hint="09999 7799"
+                android:inputType="phone"
+                android:textColorHint="#DADBDF"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.github.jorgecastilloprz.FABProgressCircle
+        android:id="@+id/fabProgressCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:arcColor="#0F9398"
+        android:layout_gravity="bottom|end">
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:src="@drawable/ic_arrow_forward" />
+
+    </com.github.jorgecastilloprz.FABProgressCircle>
+
+    <ImageView
+        android:id="@+id/ivback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackgroundBorderless"
+        android:padding="15dp"
+        android:layout_marginLeft="15sp"
+        android:src="@drawable/ic_arrow_back"
+        android:transitionName="@string/transition_arrow" />
+
+</FrameLayout>
