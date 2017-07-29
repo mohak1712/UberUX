@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#fff"
-        android:paddingTop="60dp"
+        android:paddingTop="80dp"
         android:orientation="vertical"
         android:transitionName="@string/transition_llPhone">
 
@@ -93,7 +93,6 @@
         android:background="?selectableItemBackgroundBorderless"
         android:padding="15dp"
         android:layout_marginLeft="15sp"
-        android:src="@drawable/ic_arrow_back"
-        android:transitionName="@string/transition_arrow" />
+        android:src="@drawable/ic_arrow_back" />
 
 </FrameLayout>
