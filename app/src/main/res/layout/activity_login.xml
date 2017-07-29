@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#fff">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +27,7 @@
                 android:id="@+id/tvMoving"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="20dp"
                 android:paddingLeft="20dp"
                 android:text="@string/get_moving"
                 android:textColor="#262626"
@@ -39,8 +40,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal"
                 android:gravity="center"
+                android:orientation="horizontal"
                 android:paddingLeft="20dp">
 
                 <ImageView
@@ -67,9 +68,9 @@
                     android:id="@+id/tvPhoneNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="start"
                     android:hint="@string/phone_hint"
                     android:textColorHint="#DADBDF"
-                    android:gravity="start"
                     android:textSize="20sp"
                     android:transitionName="@string/transition_tvPhoneNo" />
 
@@ -80,8 +81,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@+id/llInfo"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
                 android:background="#EEEEEE" />
 
             <TextView
@@ -102,9 +103,9 @@
         android:id="@+id/ivback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
         android:layout_marginLeft="15dp"
+        android:padding="15dp"
         android:src="@drawable/ic_arrow_back"
-        android:transitionName="@string/transition_arrow"/>
+        android:transitionName="@string/transition_arrow" />
 
 </FrameLayout>
