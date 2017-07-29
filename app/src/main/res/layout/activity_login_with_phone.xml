@@ -93,6 +93,7 @@
         android:background="?selectableItemBackgroundBorderless"
         android:padding="15dp"
         android:layout_marginLeft="15sp"
+        android:transitionName="@string/transition_arrow"
         android:src="@drawable/ic_arrow_back" />
 
 </FrameLayout>
