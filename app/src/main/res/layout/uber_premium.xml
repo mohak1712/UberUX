@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:id="@+id/rootPrell"
     android:orientation="vertical"
     android:paddingTop="20dp">
 
     <TextView
+        android:id="@+id/tvuberPre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Premium"
-        android:textColor="#000"
-        android:textSize="16sp" />
+        android:textColor="@color/grey"
+        android:textSize="12sp" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/llUberPre"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="3"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="visible">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
@@ -40,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="UberX"
-                android:textColor="#000"
+                android:textColor="@color/black"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -48,6 +55,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
@@ -66,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="UberXL"
-                android:textColor="#000"
+                android:textColor="@color/black"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -74,6 +83,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
@@ -92,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="UberHIRE"
-                android:textColor="#000"
+                android:textColor="@color/black"
                 android:textSize="16sp" />
 
         </LinearLayout>

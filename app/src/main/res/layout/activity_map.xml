@@ -1,27 +1,83 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootFrame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rootFrame"
     android:background="#000">
 
     <LinearLayout
+        android:id="@+id/rootll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rootll"
         android:background="#fff"
-        android:gravity="center"
         android:orientation="vertical">
 
-
-
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
+
     <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:id="@+id/viewPager"
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="bottom"
+        android:background="#fff"
+        android:visibility="invisible" />
 
+    <RelativeLayout
+        android:id="@+id/rlwhere"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="top"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="50dp"
+        android:background="#fff"
+        android:elevation="4dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvWhereTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:background="@null"
+            android:text="Where to?" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_access_time" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/location"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="50dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/ic_location_searching" />
+
+    <ImageView
+        android:id="@+id/ivHome"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/circle"
+        android:padding="10dp"
+        android:src="@drawable/ic_home"
+        android:visibility="gone" />
 
 </FrameLayout>
