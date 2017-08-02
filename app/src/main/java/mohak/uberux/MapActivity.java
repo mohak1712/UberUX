@@ -3,16 +3,14 @@ package mohak.uberux;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -21,8 +19,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +38,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapActivity extends BaseActivity {
 
@@ -53,8 +66,7 @@ public class MapActivity extends BaseActivity {
 
     ArgbEvaluator argbEvaluator;
 
-    private SupportMapFragment mapFragment;
-    private int devHeight, devWidth;
+    private LatLng destination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +74,7 @@ public class MapActivity extends BaseActivity {
         setContentView(R.layout.activity_map);
         ButterKnife.bind(this);
 
-        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapActivity.this);
 
@@ -70,8 +82,8 @@ public class MapActivity extends BaseActivity {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        devHeight = displayMetrics.heightPixels;
-        devWidth = displayMetrics.widthPixels;
+        int devHeight = displayMetrics.heightPixels;
+        int devWidth = displayMetrics.widthPixels;
 
         setUpPagerAdapter();
         viewPager.setClipToPadding(false);
@@ -122,7 +134,6 @@ public class MapActivity extends BaseActivity {
                         uberPre.setX(uberPre.getLeft() + (page.getWidth() * (position)));
 
 
-
                     }
 
 
@@ -163,6 +174,11 @@ public class MapActivity extends BaseActivity {
 
     }
 
+    @OnClick(R.id.rlwhere)
+    void openPlacesView() {
+        openPlaceAutoCompleteView();
+    }
+
 
     void startRevealAnimation() {
 
@@ -200,6 +216,42 @@ public class MapActivity extends BaseActivity {
         startRevealAnimation();
 
 
+    }
+
+    @Override
+    protected void setUpPolyLine() {
+
+        LatLng source = new LatLng(getUserLocation().getLatitude(), getUserLocation().getLongitude());
+        LatLng destination = getDestinationLatLong();
+        if (source != null && destination != null) {
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://maps.googleapis.com/maps/api/directions/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            getPolyline polyline = retrofit.create(getPolyline.class);
+
+            polyline.getPolylineData(source.latitude + "," + source.longitude, destination.latitude + "," + destination.longitude)
+                    .enqueue(new Callback<JsonObject>() {
+                        @Override
+                        public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+
+                            JsonObject gson = new JsonParser().parse(response.body().toString()).getAsJsonObject();
+                            try {
+                                drawPolyline(parse(new JSONObject(gson.toString())));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<JsonObject> call, Throwable t) {
+
+                        }
+                    });
+        } else
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
     }
 
     private void setUpPagerAdapter() {
