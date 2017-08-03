@@ -1,7 +1,9 @@
 package mohak.uberux;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +16,8 @@ import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
@@ -32,9 +36,13 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.RoundCap;
+import com.google.android.gms.maps.model.SquareCap;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
@@ -45,6 +53,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import io.reactivex.Observable;
+
+import static com.google.android.gms.maps.model.JointType.ROUND;
+
 public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     GoogleMap mMap;
@@ -52,6 +64,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     private FusedLocationProviderClient mFusedLocationClient;
     public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 100;
     private LatLng destination;
+    private List<LatLng> listLatLng = new ArrayList<>();
+    private Polyline blackPolyLine, greyPolyLine;
 
 
     @Override
@@ -110,6 +124,9 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
     public void openPlaceAutoCompleteView() {
 
+        mMap.clear();
+        this.listLatLng.clear();
+
         try {
             Intent intent =
                     new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
@@ -155,7 +172,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 destination = place.getLatLng();
-                addMarker(destination);
+                setUpPolyLine();
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
@@ -174,7 +191,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mMap.addMarker(options);
 
-        setUpPolyLine();
     }
 
     protected abstract void setUpPolyLine();
@@ -208,6 +224,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                 GroundOverlayOptions()
                 .position(place, 100)
                 .transparency(0.5f)
+                .zIndex(3)
                 .image(BitmapDescriptorFactory.fromBitmap(drawableToBitmap(getDrawable(R.drawable.map_overlay)))));
 
         startOverlayAnimation(groundOverlay);
@@ -248,7 +265,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         animatorSet.start();
     }
 
-    //TODO : Move to background thread
+
     public List<List<HashMap<String, String>>> parse(JSONObject jObject) {
 
         List<List<HashMap<String, String>>> routes = new ArrayList<List<HashMap<String, String>>>();
@@ -332,7 +349,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
 
     void drawPolyline(List<List<HashMap<String, String>>> result) {
 
-        ArrayList<LatLng> points;
+        ArrayList<LatLng> points = null;
         PolylineOptions lineOptions = null;
 
         // Traversing through all the routes
@@ -354,15 +371,91 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
                 points.add(position);
             }
 
-            // Adding all the points in the route to LineOptions
-            lineOptions.addAll(points);
-            lineOptions.width(10);
-            lineOptions.color(Color.BLACK);
+            this.listLatLng.addAll(points);
         }
 
-        mMap.clear();
-        // Drawing polyline in the Google Map for the i-th route
-        mMap.addPolyline(lineOptions);
+        lineOptions.width(10);
+        lineOptions.color(Color.BLACK);
+        lineOptions.startCap(new SquareCap());
+        lineOptions.endCap(new SquareCap());
+        lineOptions.jointType(ROUND);
+        blackPolyLine = mMap.addPolyline(lineOptions);
+
+        PolylineOptions greyOptions = new PolylineOptions();
+        greyOptions.width(10);
+        greyOptions.color(Color.GRAY);
+        greyOptions.startCap(new SquareCap());
+        greyOptions.endCap(new SquareCap());
+        greyOptions.jointType(ROUND);
+        greyPolyLine = mMap.addPolyline(greyOptions);
+
+        animatePolyLine();
     }
+
+    private void animatePolyLine() {
+
+        ValueAnimator animator = ValueAnimator.ofInt(0, 100);
+        animator.setDuration(1000);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+
+                List<LatLng> latLngList = blackPolyLine.getPoints();
+                int initialPointSize = latLngList.size();
+                int animatedValue = (int) animator.getAnimatedValue();
+                int newPoints = (animatedValue * listLatLng.size()) / 100;
+
+                if (initialPointSize < newPoints ) {
+                    latLngList.addAll(listLatLng.subList(initialPointSize, newPoints));
+                    blackPolyLine.setPoints(latLngList);
+                }
+
+
+            }
+        });
+
+        animator.addListener(polyLineAnimationListener);
+        animator.start();
+
+    }
+
+    Animator.AnimatorListener polyLineAnimationListener = new Animator.AnimatorListener() {
+        @Override
+        public void onAnimationStart(Animator animator) {
+
+            addMarker(listLatLng.get(listLatLng.size()-1));
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animator) {
+
+            List<LatLng> blackLatLng = blackPolyLine.getPoints();
+            List<LatLng> greyLatLng = greyPolyLine.getPoints();
+
+            greyLatLng.clear();
+            greyLatLng.addAll(blackLatLng);
+            blackLatLng.clear();
+
+            blackPolyLine.setPoints(blackLatLng);
+            greyPolyLine.setPoints(greyLatLng);
+
+            blackPolyLine.setZIndex(2);
+
+            animator.start();
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animator) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animator) {
+
+
+        }
+    };
+
 
 }

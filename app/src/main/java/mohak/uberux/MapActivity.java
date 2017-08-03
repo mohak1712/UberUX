@@ -33,11 +33,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -239,7 +245,18 @@ public class MapActivity extends BaseActivity {
 
                             JsonObject gson = new JsonParser().parse(response.body().toString()).getAsJsonObject();
                             try {
-                                drawPolyline(parse(new JSONObject(gson.toString())));
+
+                                Single.just(parse(new JSONObject(gson.toString())))
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new Consumer<List<List<HashMap<String, String>>>>() {
+                                            @Override
+                                            public void accept(List<List<HashMap<String, String>>> lists) throws Exception {
+
+                                                drawPolyline(lists);
+                                            }
+                                        });
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
