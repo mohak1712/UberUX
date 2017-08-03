@@ -10,4 +10,6 @@
     <string name="transition_tvCode">transition_tvCode</string>
     <string name="transition_tvPhoneNo">transition_tvPhoneNo</string>
     <string name="transition_llPhone">transition_llPhone</string>
+    <string name="welcome_back">Welcome back, sign in to continue</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
