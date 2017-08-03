@@ -32,9 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.ivUberLogo)
     ImageView uber;
 
-    @BindView(R.id.tvConnectSocial)
-    TextView tvCS;
-
     @BindView(R.id.tvMoving)
     TextView tvMoving;
 
@@ -120,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
         public void onTransitionStart(Transition transition) {
 
             AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(ObjectAnimator.ofFloat(tvMoving, "alpha", 0f, 1f), ObjectAnimator.ofFloat(tvCS, "alpha", 0f, 1f));
+            animatorSet.playTogether(ObjectAnimator.ofFloat(tvMoving, "alpha", 0f, 1f));
             animatorSet.setDuration(800);
             animatorSet.start();
         }
@@ -145,7 +142,6 @@ public class LoginActivity extends AppCompatActivity {
         public void onTransitionResume(Transition transition) {
 
             tvMoving.setAlpha(1);
-            tvCS.setAlpha(1);
         }
     };
 

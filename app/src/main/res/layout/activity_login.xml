@@ -85,16 +85,6 @@
                 android:layout_marginTop="20dp"
                 android:background="#EEEEEE" />
 
-            <TextView
-                android:id="@+id/tvConnectSocial"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:text="Or connect with social"
-                android:textColor="#386D7C"
-                android:textSize="14sp" />
-
         </LinearLayout>
 
     </LinearLayout>
