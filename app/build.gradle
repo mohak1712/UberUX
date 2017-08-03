@@ -30,6 +30,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.jakewharton:butterknife:8.7.0'
     compile 'com.android.support:support-v4:25.3.1'
+    compile "io.reactivex.rxjava2:rxandroid:2.0.1"
     compile 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'com.google.android.gms:play-services-location:11.0.4'
