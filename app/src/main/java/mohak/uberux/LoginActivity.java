@@ -12,12 +12,10 @@ import android.transition.Transition;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
         ChangeBounds exitTransition = new ChangeBounds();
         exitTransition.setDuration(1000);
-        exitTransition.addListener(exitListener);
+        exitTransition.addListener(new DefaultTransitionListener(){});
         getWindow().setSharedElementExitTransition(exitTransition);
 
         ChangeBounds reenterTransition = new ChangeBounds();
@@ -83,36 +81,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    Transition.TransitionListener exitListener = new Transition.TransitionListener() {
-        @Override
-        public void onTransitionStart(Transition transition) {
-
-
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-
-        }
-    };
-
-
-    Transition.TransitionListener reenterListener = new Transition.TransitionListener() {
+    Transition.TransitionListener reenterListener = new DefaultTransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
 
@@ -120,22 +89,6 @@ public class LoginActivity extends AppCompatActivity {
             animatorSet.playTogether(ObjectAnimator.ofFloat(tvMoving, "alpha", 0f, 1f));
             animatorSet.setDuration(800);
             animatorSet.start();
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-
-
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
         }
 
         @Override

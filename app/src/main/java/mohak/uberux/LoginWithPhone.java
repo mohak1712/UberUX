@@ -1,22 +1,16 @@
 package mohak.uberux;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.transition.ChangeBounds;
 import android.transition.Slide;
 import android.transition.Transition;
-import android.transition.TransitionInflater;
-import android.transition.Visibility;
-import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -26,8 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.github.jorgecastilloprz.FABProgressCircle;
 
@@ -36,7 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.view.Gravity.LEFT;
-import static android.view.Gravity.RIGHT;
 
 public class LoginWithPhone extends AppCompatActivity {
 
@@ -87,23 +78,21 @@ public class LoginWithPhone extends AppCompatActivity {
         getWindow().setSharedElementReturnTransition(returnTransition);
 
         Slide exitSlide = new Slide(LEFT);
-        exitSlide.setDuration(700);
+        exitSlide.setDuration(1000);
         exitSlide.addListener(exitTransitionListener);
         exitSlide.addTarget(R.id.llphone);
         exitSlide.setInterpolator(new DecelerateInterpolator());
         getWindow().setExitTransition(exitSlide);
 
         Slide reenterSlide = new Slide(LEFT);
-        reenterSlide.setDuration(700);
+        reenterSlide.setDuration(1000);
         reenterSlide.addListener(reenterTransitionListener);
         reenterSlide.setInterpolator(new DecelerateInterpolator(2));
         reenterSlide.addTarget(R.id.llphone);
         getWindow().setReenterTransition(reenterSlide);
-
-
     }
 
-    Transition.TransitionListener enterTransitionListener = new Transition.TransitionListener() {
+    Transition.TransitionListener enterTransitionListener = new DefaultTransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
             ivBack.setImageAlpha(0);
@@ -117,30 +106,14 @@ public class LoginWithPhone extends AppCompatActivity {
             ivBack.startAnimation(animation);
 
         }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-
-        }
     };
 
 
-    Transition.TransitionListener returnTransitionListener = new Transition.TransitionListener() {
+    Transition.TransitionListener returnTransitionListener = new DefaultTransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
 
-            InputMethodManager imm = (InputMethodManager) getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(etPhoneNo.getWindowToken(), 0);
             tvMoving.setText(null);
             tvMoving.setHint(getString(R.string.enter_no));
@@ -152,30 +125,9 @@ public class LoginWithPhone extends AppCompatActivity {
             Animation animation = AnimationUtils.loadAnimation(LoginWithPhone.this, R.anim.slide_left);
             ivBack.startAnimation(animation);
         }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-
-
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-
-        }
     };
 
-    Transition.TransitionListener exitTransitionListener = new Transition.TransitionListener() {
+    Transition.TransitionListener exitTransitionListener = new DefaultTransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
 
@@ -183,37 +135,10 @@ public class LoginWithPhone extends AppCompatActivity {
             fabProgressCircle.hide();
             llPhone.setBackgroundColor(Color.parseColor("#EFEFEF"));
         }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-
-
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-
-        }
     };
 
 
-    Transition.TransitionListener reenterTransitionListener = new Transition.TransitionListener() {
-        @Override
-        public void onTransitionStart(Transition transition) {
-
-
-        }
-
+    Transition.TransitionListener reenterTransitionListener = new DefaultTransitionListener() {
         @Override
         public void onTransitionEnd(Transition transition) {
 
@@ -221,21 +146,6 @@ public class LoginWithPhone extends AppCompatActivity {
             etPhoneNo.setCursorVisible(true);
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
 
         }
     };
