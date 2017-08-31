@@ -3,7 +3,6 @@ package mohak.uberux;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,11 +12,11 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
@@ -36,12 +35,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.model.RoundCap;
 import com.google.android.gms.maps.model.SquareCap;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -53,11 +50,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import io.reactivex.Observable;
-
 import static com.google.android.gms.maps.model.JointType.ROUND;
 
 public abstract class BaseActivity extends AppCompatActivity implements OnMapReadyCallback {
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 858;
 
     GoogleMap mMap;
     Location userLocation;
@@ -87,38 +83,43 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mMap.setMyLocationEnabled(true);
         mMap.setMaxZoomPreference(20);
 
         MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(
                 this, R.raw.maps_style);
         googleMap.setMapStyle(style);
 
-        if (checkPermission())
-            mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
+        if (checkPermission()) onLocationPermissionGranted();
+    }
 
-                            if (location != null) {
+    @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    private void onLocationPermissionGranted() {
+        if (!checkPermission()) return;
 
-                                userLocation = location;
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.setMyLocationEnabled(true);
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
 
-                                CameraPosition cameraPosition = new CameraPosition.Builder()
-                                        .target(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()))
-                                        .zoom(17)
-                                        .build();
+                        if (location != null) {
 
-                                addOverlay(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()));
-                                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            userLocation = location;
 
-                            } else {
-                                userLocation = null;
-                            }
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()))
+                                    .zoom(17)
+                                    .build();
+
+                            addOverlay(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()));
+                            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                        } else {
+                            userLocation = null;
                         }
-                    });
-
+                    }
+                });
     }
 
 
@@ -143,6 +144,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+            //Ask for the permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
             Toast.makeText(this, "Please give location permission", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -181,6 +184,19 @@ public abstract class BaseActivity extends AppCompatActivity implements OnMapRea
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (checkPermission()){
+                onLocationPermissionGranted();
+            }else {
+                Toast.makeText(this, "Location permission denied.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
