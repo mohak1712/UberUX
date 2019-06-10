@@ -12,20 +12,16 @@ import android.transition.Transition;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity {
-
-
     @BindView(R.id.llphone)
     LinearLayout llphone;
 
@@ -50,7 +46,6 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.ivback)
     ImageView ivBack;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,11 +59,9 @@ public class LoginActivity extends AppCompatActivity {
         int height = displayMetrics.heightPixels;
         uber.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (0.65 * height)));
         ivBack.setImageAlpha(0);
-
     }
 
     private void setupWindowAnimations() {
-
         ChangeBounds exitTransition = new ChangeBounds();
         exitTransition.setDuration(1000);
         exitTransition.addListener(exitListener);
@@ -79,14 +72,12 @@ public class LoginActivity extends AppCompatActivity {
         reenterTransition.addListener(reenterListener);
         reenterTransition.setInterpolator(new DecelerateInterpolator(4));
         getWindow().setSharedElementReenterTransition(reenterTransition);
-
     }
 
 
     Transition.TransitionListener exitListener = new Transition.TransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
-
 
         }
 
@@ -115,7 +106,6 @@ public class LoginActivity extends AppCompatActivity {
     Transition.TransitionListener reenterListener = new Transition.TransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
-
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.playTogether(ObjectAnimator.ofFloat(tvMoving, "alpha", 0f, 1f));
             animatorSet.setDuration(800);
@@ -124,7 +114,6 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onTransitionEnd(Transition transition) {
-
 
         }
 
@@ -140,26 +129,21 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onTransitionResume(Transition transition) {
-
             tvMoving.setAlpha(1);
         }
     };
 
     @OnClick({R.id.llphone, R.id.ivFlag, R.id.tvPhoneNo})
     void startTransition() {
-
         Intent intent = new Intent(LoginActivity.this, LoginWithPhone.class);
 
-        Pair<View, String> p1 = Pair.create((View) ivBack, getString(R.string.transition_arrow));
-        Pair<View, String> p2 = Pair.create((View) ivFlag, getString(R.string.transition_ivFlag));
-        Pair<View, String> p3 = Pair.create((View) tvCode, getString(R.string.transition_tvCode));
-        Pair<View, String> p4 = Pair.create((View) tvPhoneNo, getString(R.string.transition_tvPhoneNo));
-        Pair<View, String> p5 = Pair.create((View) llphone, getString(R.string.transition_llPhone));
+        Pair<View, String> p1 = Pair.create(ivBack, getString(R.string.transition_arrow));
+        Pair<View, String> p2 = Pair.create(ivFlag, getString(R.string.transition_ivFlag));
+        Pair<View, String> p3 = Pair.create(tvCode, getString(R.string.transition_tvCode));
+        Pair<View, String> p4 = Pair.create(tvPhoneNo, getString(R.string.transition_tvPhoneNo));
+        Pair<View, String> p5 = Pair.create(llphone, getString(R.string.transition_llPhone));
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, p1, p2, p3, p4, p5);
         startActivity(intent, options.toBundle());
-
-
     }
-
 }
