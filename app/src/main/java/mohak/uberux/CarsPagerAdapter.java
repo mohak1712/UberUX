@@ -1,20 +1,18 @@
 package mohak.uberux;
 
-import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
+
 import java.util.List;
 
-/**
- * Created by mohak on 29/7/17.
- */
-
 public class CarsPagerAdapter extends PagerAdapter {
+    private List<Integer> dataList;
 
-    List<Integer> dataList;
-
-    public CarsPagerAdapter(List<Integer> dataList) {
+    CarsPagerAdapter(List<Integer> dataList) {
         this.dataList = dataList;
     }
 
@@ -24,13 +22,13 @@ public class CarsPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
     }
 
+    @NonNull
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View view;
 
         if (dataList.get(position) == 0) {
@@ -42,6 +40,4 @@ public class CarsPagerAdapter extends PagerAdapter {
         container.addView(view);
         return view;
     }
-
-
 }

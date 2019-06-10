@@ -26,7 +26,6 @@
             android:textSize="18sp"
             android:transitionName="@string/transition_tvPhoneNo" />
 
-
         <LinearLayout
             android:id="@+id/llInfo"
             android:layout_width="match_parent"
@@ -66,9 +65,7 @@
                 android:inputType="phone"
                 android:textColorHint="#DADBDF"
                 android:textSize="18sp" />
-
         </LinearLayout>
-
     </LinearLayout>
 
     <com.github.jorgecastilloprz.FABProgressCircle
@@ -78,12 +75,11 @@
         app:arcColor="#0F9398"
         android:layout_gravity="bottom|end">
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:src="@drawable/ic_arrow_forward" />
-
     </com.github.jorgecastilloprz.FABProgressCircle>
 
     <ImageView
@@ -95,5 +91,4 @@
         android:layout_marginLeft="15sp"
         android:transitionName="@string/transition_arrow"
         android:src="@drawable/ic_arrow_back" />
-
 </FrameLayout>

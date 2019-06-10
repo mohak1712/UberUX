@@ -4,11 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateInterpolator;
@@ -19,13 +18,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -33,16 +31,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,7 +46,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapActivity extends BaseActivity {
-
     @BindView(R.id.rootFrame)
     FrameLayout rootFrame;
 
@@ -71,8 +65,6 @@ public class MapActivity extends BaseActivity {
     TextView tvWhereto;
 
     ArgbEvaluator argbEvaluator;
-
-    private LatLng destination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,54 +89,37 @@ public class MapActivity extends BaseActivity {
 
         viewPager.addOnPageChangeListener(pageChangeListener);
         viewPager.setPageTransformer(true, pageTransformer);
-
-
     }
 
     ViewPager.PageTransformer pageTransformer = new ViewPager.PageTransformer() {
         @Override
         public void transformPage(View page, float position) {
-
-
             if (position < -1) { // [-Infinity,-1)
 
-
             } else if (position <= 1) { // [-1,1]
-
                 if (position >= -1 && position < 0) {
-
-                    LinearLayout uberEco = (LinearLayout) page.findViewById(R.id.lluberEconomy);
-                    TextView uberEcoTv = (TextView) page.findViewById(R.id.tvuberEconomy);
+                    LinearLayout uberEco = page.findViewById(R.id.lluberEconomy);
+                    TextView uberEcoTv = page.findViewById(R.id.tvuberEconomy);
 
                     if (uberEco != null && uberEcoTv != null) {
-
                         uberEcoTv.setTextColor((Integer) argbEvaluator.evaluate(-2 * position, getResources().getColor(R.color.black)
                                 , getResources().getColor(R.color.grey)));
 
                         uberEcoTv.setTextSize(16 + 4 * position);
                         uberEco.setX((page.getWidth() * position));
-
                     }
-
                 } else if (position >= 0 && position <= 1) {
-
-                    TextView uberPreTv = (TextView) page.findViewById(R.id.tvuberPre);
-                    LinearLayout uberPre = (LinearLayout) page.findViewById(R.id.llUberPre);
+                    TextView uberPreTv = page.findViewById(R.id.tvuberPre);
+                    LinearLayout uberPre = page.findViewById(R.id.llUberPre);
 
                     if (uberPreTv != null && uberPre != null) {
-
                         uberPreTv.setTextColor((Integer) new ArgbEvaluator().evaluate((1 - position), getResources().getColor(R.color.grey)
                                 , getResources().getColor(R.color.black)));
 
                         uberPreTv.setTextSize(12 + 4 * (1 - position));
                         uberPre.setX(uberPre.getLeft() + (page.getWidth() * (position)));
-
-
                     }
-
-
                 }
-
             }
         }
     };
@@ -153,7 +128,6 @@ public class MapActivity extends BaseActivity {
     ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
 
         }
 
@@ -170,14 +144,12 @@ public class MapActivity extends BaseActivity {
 
     @OnClick(R.id.ivHome)
     void showViewPagerWithTransition() {
-
         TransitionManager.beginDelayedTransition(rootFrame);
         viewPager.setVisibility(View.VISIBLE);
         ivHome.setVisibility(View.INVISIBLE);
         rlWhere.setVisibility(View.INVISIBLE);
 
         mMap.setPadding(0, 0, 0, viewPager.getHeight());
-
     }
 
     @OnClick(R.id.rlwhere)
@@ -185,9 +157,7 @@ public class MapActivity extends BaseActivity {
         openPlaceAutoCompleteView();
     }
 
-
     void startRevealAnimation() {
-
         int cx = rootFrame.getMeasuredWidth() / 2;
         int cy = rootFrame.getMeasuredHeight() / 2;
 
@@ -197,7 +167,6 @@ public class MapActivity extends BaseActivity {
         anim.setDuration(500);
         anim.setInterpolator(new AccelerateInterpolator(2));
         anim.addListener(new AnimatorListenerAdapter() {
-
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
@@ -215,22 +184,17 @@ public class MapActivity extends BaseActivity {
         anim.start();
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         super.onMapReady(googleMap);
         startRevealAnimation();
-
-
     }
 
     @Override
     protected void setUpPolyLine() {
-
         LatLng source = new LatLng(getUserLocation().getLatitude(), getUserLocation().getLongitude());
         LatLng destination = getDestinationLatLong();
         if (source != null && destination != null) {
-
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://maps.googleapis.com/maps/api/directions/")
                     .addConverterFactory(GsonConverterFactory.create())
@@ -238,25 +202,22 @@ public class MapActivity extends BaseActivity {
 
             getPolyline polyline = retrofit.create(getPolyline.class);
 
-            polyline.getPolylineData(source.latitude + "," + source.longitude, destination.latitude + "," + destination.longitude)
+            polyline.getPolylineData(source.latitude + "," + source.longitude, destination.latitude + "," + destination.longitude, getString(R.string.google_maps_key))
                     .enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                            String text = response.body().toString();
+                            Log.e("request", call.request().url().toString());
+                            Log.e("respond", text);
 
-                            JsonObject gson = new JsonParser().parse(response.body().toString()).getAsJsonObject();
+                            if(!response.isSuccessful()) return;
+
+                            JsonObject gson = new JsonParser().parse(text).getAsJsonObject();
                             try {
-
                                 Single.just(parse(new JSONObject(gson.toString())))
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(new Consumer<List<List<HashMap<String, String>>>>() {
-                                            @Override
-                                            public void accept(List<List<HashMap<String, String>>> lists) throws Exception {
-
-                                                drawPolyline(lists);
-                                            }
-                                        });
-
+                                        .subscribe(lists -> drawPolyline(lists));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -272,7 +233,6 @@ public class MapActivity extends BaseActivity {
     }
 
     private void setUpPagerAdapter() {
-
         List<Integer> data = Arrays.asList(0, 1);
         CarsPagerAdapter adapter = new CarsPagerAdapter(data);
         viewPager.setAdapter(adapter);
@@ -280,9 +240,7 @@ public class MapActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-
         if (viewPager.getVisibility() == View.VISIBLE) {
-
             TransitionManager.beginDelayedTransition(rootFrame);
             viewPager.setVisibility(View.INVISIBLE);
             mMap.setPadding(0, 0, 0, 0);
@@ -295,6 +253,4 @@ public class MapActivity extends BaseActivity {
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
-
-
 }

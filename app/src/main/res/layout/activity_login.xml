@@ -73,9 +73,7 @@
                     android:textColorHint="#DADBDF"
                     android:textSize="20sp"
                     android:transitionName="@string/transition_tvPhoneNo" />
-
             </LinearLayout>
-
 
             <View
                 android:layout_width="match_parent"
@@ -84,9 +82,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:background="#EEEEEE" />
-
         </LinearLayout>
-
     </LinearLayout>
 
     <ImageView
@@ -97,5 +93,4 @@
         android:padding="15dp"
         android:src="@drawable/ic_arrow_back"
         android:transitionName="@string/transition_arrow" />
-
 </FrameLayout>
