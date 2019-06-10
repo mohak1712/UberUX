@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.ChangeBounds;
 import android.transition.Slide;
@@ -20,6 +18,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
 
 import com.github.jorgecastilloprz.FABProgressCircle;
 
@@ -225,8 +226,7 @@ public class LoginWithPhone extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
             Intent intent = new Intent(LoginWithPhone.this, PasswordActivity.class);
-            ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(LoginWithPhone.this);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(LoginWithPhone.this);
             startActivity(intent, options.toBundle());
         }, 1000);
     }
